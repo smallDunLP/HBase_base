@@ -41,9 +41,28 @@ public class HBaseDemo {
      */
     @Test
     public void baseOptions() throws IOException {
-
+        createTable("testeve","info");
     }
 
+    /**
+     * 创建表
+     * @param tableName  表名
+     * @param columnFamily  列簇名
+     * @throws IOException  抛出得异常
+     */
+    public void createTable(String tableName,String columnFamily) throws IOException {
+        if(judgeTableExists(tableName)){
+            return;
+        }else{
+            TableDescriptorBuilder tdb = TableDescriptorBuilder.newBuilder(TableName.valueOf(tableName));
+            ColumnFamilyDescriptorBuilder cfdb = ColumnFamilyDescriptorBuilder.newBuilder(Bytes.toBytes(columnFamily));
+            ColumnFamilyDescriptor cfd = cfdb.build();
+            tdb.setColumnFamily(cfd);
+            TableDescriptor td = tdb.build();
+            admin.createTable(td);
+        }
+
+    }
 
     /**
      * get得到数据
